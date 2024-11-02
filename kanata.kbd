@@ -1,0 +1,59 @@
+(defcfg
+    process-unmapped-keys yes
+    log-layer-changes yes
+)
+
+(defvar
+    tap-time 100
+    hold-time 200
+	tt $tap-time
+	ht $hold-time
+)
+
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
+
+(deflayer default
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           @nav            ralt rmet rctl
+)
+
+(deflayermap (navigate)
+	spc spc
+
+	q @qwrsw
+
+	i up
+	j left
+	k down
+	l right
+
+	, (unicode <)
+	. (unicode >)
+)
+
+(deftemplate triple-tap-layer-switch (key layer-name)
+    $key (tap-dance 200 (
+        $key
+        (macro $key $key)
+        (layer-switch $layer-name)
+    ))
+)
+
+(defalias
+    ssym S-,
+    bsym S-.
+
+	qwrsw (layer-switch default)
+    navsw (layer-switch navigate)
+
+	nav (tap-hold $tt $ht spc (layer-while-held navigate))
+)
